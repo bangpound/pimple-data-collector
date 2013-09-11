@@ -16,3 +16,10 @@ The provider depends on `WebProfilerServiceProvider`, so you also need to
 enable it if that's not already the case:
 
     $app->register(new Silex\Provider\WebProfilerServiceProvider());
+
+Art credit
+----------
+
+![Pimple](logo.png)
+
+The Pimple logo is (c) 2010 [Sensio Labs](http://sensiolabs.com/).
