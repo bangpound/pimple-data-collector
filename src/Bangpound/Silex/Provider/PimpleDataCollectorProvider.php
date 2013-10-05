@@ -39,8 +39,6 @@ class PimpleDataCollectorProvider implements ServiceProviderInterface
 
             return $loader;
         }));
-
-
     }
 
     public function boot(Application $app)
