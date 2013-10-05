@@ -12,7 +12,6 @@
 namespace Bangpound\Silex\Provider;
 
 use Bangpound\Pimple\DataCollector\PimpleDataCollector;
-use Symfony\Bridge\Twig\Extension\CodeExtension;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController;
@@ -35,8 +34,10 @@ class PimpleDataCollectorProvider implements ServiceProviderInterface
         });
 
         $app['twig.loader.filesystem'] = $app->share($app->extend('twig.loader.filesystem', function ($loader, $app) {
+
             /* @var $loader \Twig_Loader_Filesystem */
             $loader->addPath(realpath(__DIR__ .'/../../../../views/'));
+
             return $loader;
         }));
 

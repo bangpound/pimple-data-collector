@@ -2,14 +2,12 @@
 
 namespace Bangpound\Pimple\DataCollector;
 
-use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class PimpleDataCollector extends DataCollector {
-
+class PimpleDataCollector extends DataCollector
+{
     private $values;
     private $providers;
 
@@ -35,8 +33,8 @@ class PimpleDataCollector extends DataCollector {
     /**
      * Collects data for the given Request and Response.
      *
-     * @param Request $request   A Request instance
-     * @param Response $response  A Response instance
+     * @param Request    $request   A Request instance
+     * @param Response   $response  A Response instance
      * @param \Exception $exception An Exception instance
      *
      * @api
