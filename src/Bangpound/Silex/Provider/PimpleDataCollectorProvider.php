@@ -14,7 +14,6 @@ namespace Bangpound\Silex\Provider;
 use Bangpound\Pimple\DataCollector\PimpleDataCollector;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
-use Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController;
 
 /**
  * Pimple data collector provider.
@@ -25,18 +24,18 @@ class PimpleDataCollectorProvider implements ServiceProviderInterface
 {
     public function register(Application $app)
     {
-        $app['profiler']->add(new PimpleDataCollector($app));
+        $app['data_collectors'] = array_merge($app['data_collectors'], array(
+            'pimple' => $app->share(function ($app) { return new PimpleDataCollector($app); }),
+        ));
 
-        $app['web_profiler.controller.profiler'] = $app->share(function ($app) {
-            $templates = $app['data_collector.templates'];
-            $templates[] = array('pimple', 'pimple.html.twig');
-            return new ProfilerController($app['url_generator'], $app['profiler'], $app['twig'], $templates, $app['web_profiler.debug_toolbar.position']);
-        });
+        $app['data_collector.templates'] = array_merge($app['data_collector.templates'], array(
+            array('pimple', '@Pimple/pimple.html.twig')
+        ));
 
         $app['twig.loader.filesystem'] = $app->share($app->extend('twig.loader.filesystem', function ($loader, $app) {
 
             /* @var $loader \Twig_Loader_Filesystem */
-            $loader->addPath(realpath(__DIR__ .'/../../../../views/'));
+            $loader->addPath(realpath(__DIR__ .'/../../../../views/'), 'Pimple');
 
             return $loader;
         }));
