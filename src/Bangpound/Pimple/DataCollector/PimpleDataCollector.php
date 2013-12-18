@@ -25,8 +25,8 @@ class PimpleDataCollector extends DataCollector
         $valuesReflector = $reflector->getProperty('values');
         $valuesReflector->setAccessible(true);
         $values = $valuesReflector->getValue($container);
-        foreach ($values as $key => $value) {
-            $this->values[$key] = $this->varToString($value);
+        foreach ($container->keys() as $key) {
+            $this->values[$key] = $this->varToString($values[$key]);
         }
     }
 
