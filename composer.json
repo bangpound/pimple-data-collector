@@ -16,5 +16,10 @@
             "Bangpound\\Pimple\\DataCollector\\": "src/",
             "Bangpound\\Silex\\Provider\\": "src/"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
     }
 }
