@@ -9,6 +9,11 @@ use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 class PimpleDataCollector extends DataCollector implements LateDataCollectorInterface
 {
+    /**
+     * @var Util\ValueExporter
+     */
+    private $valueExporter;
+
     private $container;
 
     public function __construct(\Pimple $container = null)
@@ -77,5 +82,21 @@ class PimpleDataCollector extends DataCollector implements LateDataCollectorInte
         foreach ($this->container->keys() as $key) {
             $this->data['values'][$key] = $this->varToString($values[$key]);
         }
+    }
+
+    /**
+     * Converts a PHP variable to a string.
+     *
+     * @param mixed $var A PHP variable
+     *
+     * @return string The string representation of the variable
+     */
+    protected function varToString($var)
+    {
+        if (null === $this->valueExporter) {
+            $this->valueExporter = new Util\ValueExporter();
+        }
+
+        return $this->valueExporter->exportValue($var);
     }
 }
