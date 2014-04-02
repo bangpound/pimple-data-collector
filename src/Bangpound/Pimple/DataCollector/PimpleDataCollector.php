@@ -5,29 +5,15 @@ namespace Bangpound\Pimple\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
-class PimpleDataCollector extends DataCollector
+class PimpleDataCollector extends DataCollector implements LateDataCollectorInterface
 {
-    private $values;
-    private $providers;
+    private $container;
 
     public function __construct(\Pimple $container = null)
     {
-        $reflector = new \ReflectionObject($container);
-
-        $providersReflector = $reflector->getProperty('providers');
-        $providersReflector->setAccessible(true);
-        $providers = $providersReflector->getValue($container);
-        foreach ($providers as $provider) {
-            $this->providers[] = get_class($provider);
-        }
-
-        $valuesReflector = $reflector->getProperty('values');
-        $valuesReflector->setAccessible(true);
-        $values = $valuesReflector->getValue($container);
-        foreach ($container->keys() as $key) {
-            $this->values[$key] = $this->varToString($values[$key]);
-        }
+        $this->container = $container;
     }
 
     /**
@@ -41,10 +27,6 @@ class PimpleDataCollector extends DataCollector
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-        $this->data = array(
-            'providers' => $this->providers,
-            'values' => $this->values,
-        );
     }
 
     /**
@@ -67,5 +49,33 @@ class PimpleDataCollector extends DataCollector
     public function getValues()
     {
         return $this->data['values'];
+    }
+
+    /**
+     * Collects data as late as possible.
+     */
+    public function lateCollect()
+    {
+        $this->data = array(
+            'providers' => array(),
+            'values' => array(),
+            'globals' => array(),
+        );
+
+        $reflector = new \ReflectionObject($this->container);
+
+        $providersReflector = $reflector->getProperty('providers');
+        $providersReflector->setAccessible(true);
+        $providers = $providersReflector->getValue($this->container);
+        foreach ($providers as $provider) {
+            $this->data['providers'][] = get_class($provider);
+        }
+
+        $valuesReflector = $reflector->getProperty('values');
+        $valuesReflector->setAccessible(true);
+        $values = $valuesReflector->getValue($this->container);
+        foreach ($this->container->keys() as $key) {
+            $this->data['values'][$key] = $this->varToString($values[$key]);
+        }
     }
 }
