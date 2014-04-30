@@ -11,6 +11,7 @@
 
 namespace Bangpound\Silex\Provider;
 
+use Bangpound\Pimple\DataCollector\GlobalsDataCollector;
 use Bangpound\Pimple\DataCollector\PimpleDataCollector;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
@@ -26,10 +27,12 @@ class PimpleDataCollectorProvider implements ServiceProviderInterface
     {
         $app['data_collectors'] = array_merge($app['data_collectors'], array(
             'pimple' => $app->share(function ($app) { return new PimpleDataCollector($app); }),
+            'globals' => $app->share(function () { return new GlobalsDataCollector(); }),
         ));
 
         $app['data_collector.templates'] = array_merge($app['data_collector.templates'], array(
-            array('pimple', '@Pimple/pimple.html.twig')
+            array('pimple', '@Pimple/pimple.html.twig'),
+            array('globals', '@Pimple/globals.html.twig'),
         ));
 
         $app['twig.loader.filesystem'] = $app->share($app->extend('twig.loader.filesystem', function ($loader, $app) {
