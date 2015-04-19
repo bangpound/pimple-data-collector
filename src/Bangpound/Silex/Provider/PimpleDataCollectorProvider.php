@@ -38,7 +38,7 @@ class PimpleDataCollectorProvider implements ServiceProviderInterface
         $app['twig.loader.filesystem'] = $app->share($app->extend('twig.loader.filesystem', function ($loader, $app) {
 
             /* @var $loader \Twig_Loader_Filesystem */
-            $loader->addPath(realpath(__DIR__ .'/../../../../views/'), 'Pimple');
+            $loader->addPath(realpath(__DIR__.'/../../../../views/'), 'Pimple');
 
             return $loader;
         }));
