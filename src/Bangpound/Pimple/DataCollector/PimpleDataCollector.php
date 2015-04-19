@@ -64,7 +64,6 @@ class PimpleDataCollector extends DataCollector implements LateDataCollectorInte
         $this->data = array(
             'providers' => array(),
             'values' => array(),
-            'globals' => array(),
         );
 
         $reflector = new \ReflectionObject($this->container);
