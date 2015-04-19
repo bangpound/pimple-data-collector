@@ -2,6 +2,7 @@
 
 namespace Bangpound\Pimple\DataCollector;
 
+use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -68,11 +69,13 @@ class PimpleDataCollector extends DataCollector implements LateDataCollectorInte
 
         $reflector = new \ReflectionObject($this->container);
 
-        $providersReflector = $reflector->getProperty('providers');
-        $providersReflector->setAccessible(true);
-        $providers = $providersReflector->getValue($this->container);
-        foreach ($providers as $provider) {
-            $this->data['providers'][] = get_class($provider);
+        if ($this->container instanceof Application) {
+            $providersReflector = $reflector->getProperty('providers');
+            $providersReflector->setAccessible(true);
+            $providers = $providersReflector->getValue($this->container);
+            foreach ($providers as $provider) {
+                $this->data['providers'][] = get_class($provider);
+            }
         }
 
         $valuesReflector = $reflector->getProperty('values');
