@@ -2,6 +2,7 @@
 
 namespace Bangpound\Pimple\DataCollector;
 
+use Pimple\Container;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,7 @@ class PimpleDataCollector extends DataCollector implements LateDataCollectorInte
 
     private $container;
 
-    public function __construct(\Pimple $container = null)
+    public function __construct(Container $container = null)
     {
         $this->container = $container;
     }
@@ -78,11 +79,8 @@ class PimpleDataCollector extends DataCollector implements LateDataCollectorInte
             }
         }
 
-        $valuesReflector = $reflector->getProperty('values');
-        $valuesReflector->setAccessible(true);
-        $values = $valuesReflector->getValue($this->container);
         foreach ($this->container->keys() as $key) {
-            $this->data['values'][$key] = $this->varToString($values[$key]);
+            $this->data['values'][$key] = $this->varToString($this->container->raw($key));
         }
     }
 

@@ -2,7 +2,7 @@
     "name": "bangpound/pimple-data-collector",
     "description": "WebProfiler data collector for the Pimple container but really Silex",
     "require": {
-        "silex/web-profiler": "~1.0"
+        "silex/web-profiler": "~2.0"
     },
     "license": "MIT",
     "authors": [
@@ -19,7 +19,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-develop": "2.0.x-dev"
         }
     }
 }

@@ -13,8 +13,8 @@ namespace Bangpound\Silex\Provider;
 
 use Bangpound\Pimple\DataCollector\GlobalsDataCollector;
 use Bangpound\Pimple\DataCollector\PimpleDataCollector;
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 /**
  * Pimple data collector provider.
@@ -23,28 +23,26 @@ use Silex\ServiceProviderInterface;
  */
 class PimpleDataCollectorProvider implements ServiceProviderInterface
 {
-    public function register(Application $app)
+    public function register(Container $app)
     {
-        $app['data_collectors'] = array_merge($app['data_collectors'], array(
-            'pimple' => $app->share(function ($app) { return new PimpleDataCollector($app); }),
-            'globals' => $app->share(function () { return new GlobalsDataCollector(); }),
-        ));
+        $app->extend('data_collectors', function ($collectors, Container $c) {
+            $collectors['pimple'] = function (Container $c) { return new PimpleDataCollector($c); };
+            $collectors['globals'] = function () { return new GlobalsDataCollector(); };
+
+            return $collectors;
+        });
 
         $app['data_collector.templates'] = array_merge($app['data_collector.templates'], array(
             array('pimple', '@Pimple/pimple.html.twig'),
             array('globals', '@Pimple/globals.html.twig'),
         ));
 
-        $app['twig.loader.filesystem'] = $app->share($app->extend('twig.loader.filesystem', function ($loader, $app) {
+        $app['twig.loader.filesystem'] = $app->extend('twig.loader.filesystem', function ($loader, $app) {
 
             /* @var $loader \Twig_Loader_Filesystem */
             $loader->addPath(realpath(__DIR__.'/../../../../views/'), 'Pimple');
 
             return $loader;
-        }));
-    }
-
-    public function boot(Application $app)
-    {
+        });
     }
 }
